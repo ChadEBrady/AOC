@@ -10,44 +10,36 @@ import Foundation
 struct Day02: AdventDay {
 
   let data: String
-
   private let maxMarbles = Round(red: 12, green: 13, blue: 14)
 
   func part1() -> Any {
-    var games = [Game]()
-    let lines = data.components(separatedBy: .newlines)
-
-    for line in lines {
-        guard line.isEmpty == false else { continue }
-        games.append(Game(value: line))
-    }
     
-    let gameSum = games.reduce(0, { partial, game in
-      print(game.maxRound)
+    parseGames(input: data).reduce(0, { result, game in
       if game.isPossible(maxMarbles: maxMarbles) {
-        return partial + game.id
+        return result + game.id
       } else {
-        return partial
+        return result
       }
     })
-    return gameSum
   }
 
   func part2() -> Any {
-    var games = [Game]()
-    let lines = data.components(separatedBy: .newlines)
-
-    for line in lines {
-        guard line.isEmpty == false else { continue }
-        games.append(Game(value: line))
-    }
-
-    let gameSum = games.reduce(0, { partial, game in
+    
+    parseGames(input: data).reduce(0, { result, game in
       let gameMaxRound = game.maxRound
+
       let power = gameMaxRound.red * gameMaxRound.blue * game.maxRound.green
-      return power + partial
+      return result + power
     })
-    return gameSum
+  }
+
+  private func parseGames(input: String) -> [Game] {
+    
+    input.components(separatedBy: .newlines).compactMap {
+      guard $0.isEmpty == false else { return nil }
+
+      return Game(value: $0)
+    }
   }
 }
 
@@ -66,7 +58,9 @@ private struct Game {
   }
 
   init(value: String) {
+
       var roundString = value.dropFirst(5)
+
       let gameIndex = value.firstIndex(of: ":") ?? roundString.startIndex
 
       let gameId = roundString.prefix(upTo: gameIndex)
@@ -75,23 +69,22 @@ private struct Game {
       roundString = roundString[gameIndex..<roundString.endIndex]
       roundString = roundString.dropFirst(2)
 
-      let gameRounds = roundString.components(separatedBy: ";")
-      self.rounds = gameRounds.map {
-        let round = $0.components(separatedBy: ",")
-        var colorDict = [String: Int]()
-        
-        for str in round {
+    self.rounds = roundString.components(separatedBy: ";").map {
+      var colorDict = [String: Int]()
+      
+      let round = $0.components(separatedBy: ",")
 
-          let valueKey = str.trimmingCharacters(in: .whitespaces).components(separatedBy: " ")
-          if
-            let color = valueKey.last,
-            let value = valueKey.first?.trimmingCharacters(in: .whitespaces)
-          {
-            colorDict[color] = Int(value) ?? 0
-          }
+      for marbleCount in round {
+        let valueKey = marbleCount.trimmingCharacters(in: .whitespaces).components(separatedBy: " ")
+        if
+          let color = valueKey.last,
+          let value = valueKey.first?.trimmingCharacters(in: .whitespaces)
+        {
+          colorDict[color] = Int(value) ?? 0
         }
-        return Round(dict: colorDict)
       }
+      return Round(dict: colorDict)
+    }
   }
 
   func isPossible(maxMarbles: Round) -> Bool {
@@ -118,4 +111,3 @@ private struct Round {
     green = dict["green"] ?? 0
   }
 }
-
