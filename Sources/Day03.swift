@@ -38,7 +38,7 @@ struct Day03: AdventDay {
     var partDigits: [Int] = []
     var positionStart: Position?
 
-    var cleanUp = {
+    let cleanUp = {
       let partNum = arrayToInt(arr: partDigits)
       digitPositions.forEach {
         partPositions[$0] = partNum

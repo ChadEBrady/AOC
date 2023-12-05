@@ -12,11 +12,11 @@ struct Card {
   let first: Set<Int>
   let second: Set<Int>
 
-  init(input: String) {
+init(input: String) {
     let gameString = input.dropFirst(5)
     let gameIndex = input.firstIndex(of: ":") ?? gameString.startIndex
-    let gameId = gameString.prefix(upTo: gameIndex)
-    self.id = Int(String(gameId)) ?? -1
+  let gameId = gameString.prefix(upTo: gameIndex).trimmingCharacters(in: .whitespaces)
+  self.id = Int(String(gameId)) ?? -1
 
     let values = String(gameString[gameIndex..<gameString.endIndex]).components(separatedBy: "|")
     
@@ -44,8 +44,6 @@ struct Day04: AdventDay {
     }.reduce(0, +)
   }
 
-
-  // DOES NOT WORK CORRECTLY WITH FULL SET
   func part2() -> Any {
     var lines = data.components(separatedBy: .newlines).filter { !$0.isEmpty }
     var cards: [Card] = []
@@ -60,11 +58,10 @@ struct Day04: AdventDay {
     if lines.isEmpty { return }
      
     let line = lines.removeFirst()
-
+    
     let card = Card(input: line)
-
     let copyCount = copies.filter { $0 == card.id }.count
-
+    copies = copies.filter { $0 != card.id }
     cards.append(card)
     count += 1
 
@@ -85,3 +82,4 @@ struct Day04: AdventDay {
     makeCards(lines: &lines, cards: &cards, copies: &copies, count: &count)
   }
 }
+
