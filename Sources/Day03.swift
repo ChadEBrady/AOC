@@ -25,7 +25,7 @@ struct Day03: AdventDay {
 
   func partsAndGears() -> ([Int], [Int]) {
     
-    let digits: [String] = [0,1,2,3,4,5,6,7,8,9].map { String($0)}
+    let digits: [String] = [0,1,2,3,4,5,6,7,8,9].map { String($0) }
     
     let matrix = data.components(separatedBy: .newlines).map {
       return Array($0)
