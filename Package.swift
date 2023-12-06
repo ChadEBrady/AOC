@@ -4,7 +4,7 @@ import PackageDescription
 let dependencies: [Target.Dependency] = [
     .product(name: "Algorithms", package: "swift-algorithms"),
     .product(name: "Collections", package: "swift-collections"),
-    .product(name: "ArgumentParser", package: "swift-argument-parser"),
+    .product(name: "ArgumentParser", package: "swift-argument-parser")
 ]
 
 let package = Package(
